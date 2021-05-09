@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => "Дэшборд"])
+@extends('layouts.app', ['title' => "Главная", 'tab' => 'home'])
 
 @section('content')
     @include('layouts.headers.cards')
@@ -279,7 +279,6 @@
             </div>
         </div>
 
-        @include('layouts.footers.auth')
     </div>
 @endsection
 

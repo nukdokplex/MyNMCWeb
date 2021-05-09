@@ -6,7 +6,11 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-json": "*",
         "creativeorange/gravatar": "^1.0",
+        "elforastero/transliterate": "@RC",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

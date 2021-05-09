@@ -15722,6 +15722,66 @@
      
 }
 
+    namespace ElForastero\Transliterate { 
+            /**
+     * Class Facade.
+     *
+     * @author Eugene Dzhumak <elforastero@ya.ru>
+     */ 
+        class Facade {
+                    /**
+         * Change transliterating text language.
+         *
+         * @param string $lang one of the Map::LANG_* constants or custom language
+         * @return \Transliterator 
+         * @static 
+         */ 
+        public static function from($lang)
+        {
+                        /** @var \ElForastero\Transliterate\Transliterator $instance */
+                        return $instance->from($lang);
+        }
+                    /**
+         * Change transliteration map.
+         *
+         * @param string $map name of the transliteration map
+         * @return \Transliterator 
+         * @static 
+         */ 
+        public static function useMap($map)
+        {
+                        /** @var \ElForastero\Transliterate\Transliterator $instance */
+                        return $instance->useMap($map);
+        }
+                    /**
+         * Transliterate the given string.
+         *
+         * @param string $text
+         * @return string 
+         * @static 
+         */ 
+        public static function make($text)
+        {
+                        /** @var \ElForastero\Transliterate\Transliterator $instance */
+                        return $instance->make($text);
+        }
+                    /**
+         * Create a slug by converting and removing all non-ascii characters.
+         *
+         * @param string $text
+         * @return string 
+         * @static 
+         */ 
+        public static function slugify($text)
+        {
+                        /** @var \ElForastero\Transliterate\Transliterator $instance */
+                        return $instance->slugify($text);
+        }
+         
+    }
+     
+}
+
     namespace Facade\Ignition\Facades { 
             /**
      * Class Flare.
@@ -19341,6 +19401,7 @@ namespace  {
             class View extends \Illuminate\Support\Facades\View {}
             class Debugbar extends \Barryvdh\Debugbar\Facade {}
             class Gravatar extends \Creativeorange\Gravatar\Facades\Gravatar {}
+            class Transliterate extends \ElForastero\Transliterate\Facade {}
             class Flare extends \Facade\Ignition\Facades\Flare {}
      
 }

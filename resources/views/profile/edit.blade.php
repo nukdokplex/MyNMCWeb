@@ -1,11 +1,7 @@
 @extends('layouts.app', ['title' => "Профиль пользователя"])
 
 @section('content')
-    @include('users.partials.header', [
-        'title' => "Здравствуйте, " . auth()->user()->name . "!",
-        'description' => "Это страница вашего профиля",
-        'class' => 'col-lg-7'
-    ])
+    @include('layouts.headers.empty')
 
     <div class="container-fluid mt--7">
         <div class="row">
@@ -15,11 +11,12 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    @if(Gravatar::exists(auth()->user()->email))
-                                        <img alt="Фото пользователя" src="{{ Gravatar::get(auth()->user()->email)}}" class="rounded-circle">
-                                    @else
-                                        <img alt="Фото пользователя" src="{{asset("/assets/img/common/profile_photo.png")}}" class="rounded-circle">
-                                    @endif
+                                    @auth()
+                                        <img alt="Фото пользователя" src="{!! Gravatar::get(auth()->user()->email) !!}" class="rounded-circle">
+                                    @endauth
+                                    @guest()
+                                        <img alt="Фото пользователя" src="https://www.gravatar.com/avatar/?d=mp" class="rounded-circle">
+                                    @endguest
                                 </a>
                             </div>
                         </div>

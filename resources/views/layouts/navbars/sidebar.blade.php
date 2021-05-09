@@ -6,7 +6,7 @@
         </button>
         <!-- Brand -->
         <a class="navbar-brand pt-0" href="{{ route('home') }}">
-            <img src="{{ asset('assets') }}/img/brand/blue.png" class="navbar-brand-img" alt="...">
+            <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="...">
         </a>
         <!-- User -->
         <ul class="nav align-items-center d-md-none">
@@ -14,36 +14,39 @@
                 <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="media align-items-center">
                         <span class="avatar avatar-sm rounded-circle">
-                        <img alt="Image placeholder" src="{{ asset('argon') }}/img/theme/team-1-800x800.jpg">
+                            @auth()
+                                <img alt="Фото пользователя" src="{!! Gravatar::get(auth()->user()->email) !!}">
+                            @endauth
+                            @guest()
+                                <img alt="Фото пользователя" src="https://www.gravatar.com/avatar/?d=mp">
+                            @endguest
                         </span>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
-                    <div class=" dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6>
+                    <div class="dropdown-header noti-title">
+                        <h6 class="text-overflow m-0">Меню</h6>
                     </div>
-                    <a href="{{ route('profile.edit') }}" class="dropdown-item">
-                        <i class="ni ni-single-02"></i>
-                        <span>{{ __('My profile') }}</span>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="ni ni-settings-gear-65"></i>
-                        <span>{{ __('Settings') }}</span>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="ni ni-calendar-grid-58"></i>
-                        <span>{{ __('Activity') }}</span>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="ni ni-support-16"></i>
-                        <span>{{ __('Support') }}</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
-                        <i class="ni ni-user-run"></i>
-                        <span>{{ __('Logout') }}</span>
-                    </a>
+                    @auth()
+                        <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                            <i style="font-size: .800rem !Important;" class="mdi mdi-18px mdi-account"></i>
+                            <span>Мой профиль</span>
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                            <i class="mdi mdi-18px mdi-logout-variant"></i>
+                            <span>Выйти</span>
+                        </a>
+                    @endauth
+                    @guest()
+                        <a href="{{ route('login') }}" class="dropdown-item">
+                            <i class="mdi mdi-login-variant"></i>
+                            <span>Войти</span>
+                        </a>
+                    @endguest
+
                 </div>
             </li>
         </ul>
@@ -54,80 +57,96 @@
                 <div class="row">
                     <div class="col-6 collapse-brand">
                         <a href="{{ route('home') }}">
-                            <img src="{{ asset('argon') }}/img/brand/blue.png">
+                            <img alt="Мой НМК" src="{{ asset('assets/img/brand/blue.png') }}">
                         </a>
                     </div>
                     <div class="col-6 collapse-close">
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle sidenav">
+                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Открыть/Закрыть">
                             <span></span>
                             <span></span>
                         </button>
                     </div>
                 </div>
             </div>
-            <!-- Form -->
-            <form class="mt-4 mb-3 d-md-none">
-                <div class="input-group input-group-rounded input-group-merge">
-                    <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="{{ __('Search') }}" aria-label="Search">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <span class="fa fa-search"></span>
-                        </div>
-                    </div>
-                </div>
-            </form>
+
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">
-                        <i class="ni ni-tv-2 text-primary"></i> {{ __('Dashboard') }}
+                    <a class="nav-link{{$active_tab == 'home' ? ' active' : ''}}" href="{{ route('home') }}">
+                        <i class="mdi mdi-18px mdi-home"></i> Главная
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="#navbar-examples" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">
-                        <i class="fab fa-laravel" style="color: #f4645f;"></i>
-                        <span class="nav-link-text" style="color: #f4645f;">Пользователь</span>
+                    <a class="nav-link{{$active_tab == 'posts' ? ' active' : ''}}" href="#">
+                        <i class="mdi mdi-18px mdi-post"></i> Новости
                     </a>
-
-                    <div class="collapse show" id="navbar-examples">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('profile.edit') }}">
-                                    Изменение профиля
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user.index') }}">
-                                    Управление пользователями
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
-
-
-
+                <li class="nav-item">
+                    <a class="nav-link{{$active_tab == 'news' ? ' active' : ''}}" href="{{ route('news') }}">
+                        <i class="mdi mdi-18px mdi-newspaper"></i> Новости колледжа
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{$active_tab == 'schedule' ? ' active' : ''}}" href="#">
+                        <i class="mdi mdi-18px mdi-clock-outline"></i> Расписание
+                    </a>
+                </li>
             </ul>
             <!-- Divider -->
             <hr class="my-3">
             <!-- Heading -->
-            <h6 class="navbar-heading text-muted">Documentation</h6>
+            <h6 class="navbar-heading text-muted">Управление</h6>
             <!-- Navigation -->
             <ul class="navbar-nav mb-md-3">
                 <li class="nav-item">
-                    <a class="nav-link" href="https://argon-dashboard-laravel.creative-tim.com/docs/getting-started/overview.html">
-                        <i class="ni ni-spaceship"></i> Getting started
+                    <a class="nav-link{{$active_tab == 'groups' ? ' active' : ''}}" href="{{route('groups')}}">
+                        <i class="mdi mdi-18px mdi-account-group"></i> Группы
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://argon-dashboard-laravel.creative-tim.com/docs/foundation/colors.html">
-                        <i class="ni ni-palette"></i> Foundation
+                    <a class="nav-link{{$active_tab == 'specializations' ? ' active' : ''}}" href="{{route('specializations')}}">
+                        <i class="mdi mdi-18px mdi-toolbox"></i> Специальности
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://argon-dashboard-laravel.creative-tim.com/docs/components/alerts.html">
-                        <i class="ni ni-ui-04"></i> Components
+                    <a class="nav-link{{$active_tab == 'subjects' ? ' active' : ''}}" href="{{route('subjects')}}">
+                        <i class="mdi mdi-18px mdi-book-open-variant"></i> Предметы
                     </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{$active_tab == 'auditories' ? ' active' : ''}}" href="{{route('auditories')}}">
+                        <i class="mdi mdi-18px mdi-google-classroom"></i> Аудитории
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{$active_tab == 'users' ? ' active' : ''}}" href="{{route('users')}}">
+                        <i class="mdi mdi-18px mdi-account-multiple"></i> Пользователи
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#schedule-sidebar-item" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">
+                        <i class="mdi mdi-18px mdi-table-clock"></i>
+                        <span class="nav-link-text">Расписание</span>
+                    </a>
+                    <div class="collapse{{in_array($active_tab, ['schedule_edit', 'primary_schedule_edit', 'rings_schedule_edit']) ? ' show' : ''}}" id="schedule-sidebar-item">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link{{$active_tab == 'schedule_edit' ? ' active' : ''}}" href="#">
+                                    Текущее расписание
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link{{$active_tab == 'primary_schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit.primary.groups')}}">
+                                    Основное расписание
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link{{$active_tab == 'rings_schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit.rings')}}">
+                                    Расписание звонков
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </div>

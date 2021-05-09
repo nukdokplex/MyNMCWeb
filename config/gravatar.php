@@ -10,7 +10,7 @@ return [
 
 		// the fallback image, can be a string or a url
 		// for more info, visit: http://en.gravatar.com/site/implement/images/#default-image
-		'fallback' => '/assets/img/common/profile_photo.png',
+		'fallback' => 'mp',
 
 		// would you like to return a https://... image
 		'secure' => true,
@@ -23,12 +23,12 @@ return [
 		// pg: may contain rude gestures, provocatively dressed individuals, the lesser swear words, or mild violence.
 		// r: may contain such things as harsh profanity, intense violence, nudity, or hard drug use.
 		// x: may contain hardcore sexual imagery or extremely disturbing violence.
-		'maximumRating' => 'pg',
+		'maximumRating' => 'x',
 
 		// If for some reason you wanted to force the default image to always load, you can do that setting this to true
-		'forceDefault' => true,
+		'forceDefault' => false,
 
 		// If you require a file-type extension (some places do) then you may also add an (optional) .jpg extension to that URL
-		'forceExtension' => 'png',
+		'forceExtension' => '',
 	]
 ];
