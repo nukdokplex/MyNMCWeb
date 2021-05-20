@@ -1,4 +1,4 @@
-@extends('layouts.app', ['class' => 'bg-default', 'title' => "Главная"])
+@extends('layouts.app', ['class' => 'bg-default', 'title' => "Главная", 'tab' => 'home'])
 
 @section('content')
     <div class="header bg-gradient-primary py-7 py-lg-8">

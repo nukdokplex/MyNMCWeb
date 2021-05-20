@@ -5,6 +5,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Testing\Fluent\Concerns\Has;
+use Spatie\Permission\Models\Role;
 
 class UsersTableSeeder extends Seeder
 {
@@ -17,6 +19,18 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $user = new User();
+        $user->name = 'Титов Виктор';
+        $user->email = 'webmaster@nukdotcom.ru';
+        $user->markEmailAsVerified();
+        $user->password = Hash::make('12345678');
+
+        $user->save();
+
+        $user->assignRole(Role::findByName('system architect'));
+
+        $user->save();
+
         $teachers = [
             'Азнабаева А.Б.',
             'Акитарова Т.С.',
@@ -135,7 +149,7 @@ class UsersTableSeeder extends Seeder
             $user->name = $teacher['name'];
             $user->email = $teacher['email'];
             $user->email_verified_at = now();
-            $user->password = '12345678';
+            $user->password = Hash::make('12345678');
 
             $user->save();
 
@@ -143,13 +157,6 @@ class UsersTableSeeder extends Seeder
             $user->save();
         }
 
-        /*DB::table('users')->insert([
-            'name' => 'Титов Виктор',
-            'email' => 'webmaster@nukdotcom.ru',
-            'email_verified_at' => now(),
-            'password' => Hash::make('12345678'),
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);*/
+
     }
 }

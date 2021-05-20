@@ -60,7 +60,6 @@ class UserController extends Controller
             $result_roles[$available_role['id']] = self::translateRoleName($available_role['name']);
         }
 
-
         return view('users.index', ['available_roles' => $result_roles]);
     }
 

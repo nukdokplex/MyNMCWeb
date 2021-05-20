@@ -27,6 +27,8 @@ class PrimarySchedule extends Model
     }
 
     public function getScheduleByDay($week_number, $day){
+        //$ASDASD = $this->schedule;
+
         return $this->getSchedule()[$week_number][$day];
     }
 
@@ -35,7 +37,7 @@ class PrimarySchedule extends Model
     }
 
     public function getSchedule(){
-        return json_decode($this->schedule);
+        return json_decode($this->schedule, true);
     }
     public function setGroup($group){
         $relationship = $this->morphToMany(
@@ -50,7 +52,7 @@ class PrimarySchedule extends Model
     }
 
     public function setScheduleByDay($schedule, $week_day, $day){
-        $schedule_to_apply = json_decode($this->schedule);
+        $schedule_to_apply = $this->getSchedule();
 
         $schedule_to_apply[$week_day][$day] = $schedule;
 

@@ -80,6 +80,11 @@ Route::get('schedule/edit/primary/{group}/{week_number}/{day_of_week}', [Schedul
     ->where('week_number', 'odd|even')
     ->where('day_of_week', 'mon|tue|wed|thu|fri|sat|sun');
 
+Route::post('schedule/edit/primary/{group}/{week_number}/{day_of_week}', [ScheduleController::class, 'edit_primary_schedule_ajax'])
+    ->name('ajax.schedule.edit.primary.update')
+    ->where('week_number', 'odd|even')
+    ->where('day_of_week', 'mon|tue|wed|thu|fri|sat|sun');
+
 //Rings Schedule
 Route::get('schedule/edit/rings', [ScheduleController::class, 'rings_edit'])
     ->name('schedule.edit.rings');

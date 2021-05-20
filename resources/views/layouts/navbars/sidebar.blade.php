@@ -28,10 +28,10 @@
                         <h6 class="text-overflow m-0">Меню</h6>
                     </div>
                     @auth()
-                        <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                      <!--  <a href="{{ route('profile.edit') }}" class="dropdown-item">
                             <i style="font-size: .800rem !Important;" class="mdi mdi-18px mdi-account"></i>
                             <span>Мой профиль</span>
-                        </a>
+                        </a>-->
 
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
