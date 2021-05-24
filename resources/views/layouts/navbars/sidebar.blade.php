@@ -131,7 +131,7 @@
                     <div class="collapse{{in_array($active_tab, ['schedule_edit', 'primary_schedule_edit', 'rings_schedule_edit']) ? ' show' : ''}}" id="schedule-sidebar-item">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link{{$active_tab == 'schedule_edit' ? ' active' : ''}}" href="#">
+                                <a class="nav-link{{$active_tab == 'schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit')}}">
                                     Текущее расписание
                                 </a>
                             </li>

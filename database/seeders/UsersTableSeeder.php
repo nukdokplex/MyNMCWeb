@@ -1,7 +1,10 @@
 <?php
 namespace Database\Seeders;
 
+use App\Models\Group;
 use App\Models\User;
+use Faker\Factory;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -22,14 +25,42 @@ class UsersTableSeeder extends Seeder
         $user = new User();
         $user->name = 'Титов Виктор';
         $user->email = 'webmaster@nukdotcom.ru';
-        $user->markEmailAsVerified();
         $user->password = Hash::make('12345678');
-
-        $user->save();
-
         $user->assignRole(Role::findByName('system architect'));
 
         $user->save();
+        $user->markEmailAsVerified();
+
+        $groups = Group::all();
+        $faker = Factory::create('ru_RU');
+        $student = Role::findByName('student');
+        foreach ($groups as $group){
+            $i = 0;
+            while ($i < 30){
+                try {
+                    $gender = ['male', 'female'][array_rand(['male', 'female'], 1)];
+
+                    $user = new User();
+                    $user->name = $faker->name($gender);
+                    $user->email = "{$faker->userName}@nmt.edu.ru";
+
+                    $user->password = Hash::make(md5($user->email));
+                    $user->save();
+                    $user->assignRole($student);
+                    $user->assignGroup($group);
+                    $user->save();
+                    $user->markEmailAsVerified();
+                }
+                catch (QueryException $exception){
+                    $this->command->info('Duplicate found! Rebuilding...');
+                    continue;
+                }
+                $i++;
+            }
+
+        }
+        $this->command->info('Students seeded successfully!');
+
 
         $teachers = [
             'Азнабаева А.Б.',
@@ -150,11 +181,10 @@ class UsersTableSeeder extends Seeder
             $user->email = $teacher['email'];
             $user->email_verified_at = now();
             $user->password = Hash::make('12345678');
-
             $user->save();
-
             $user->assignRole(['teacher']);
             $user->save();
+            $user->markEmailAsVerified();
         }
 
 

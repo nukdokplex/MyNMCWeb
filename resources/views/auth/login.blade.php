@@ -23,7 +23,7 @@
                     <div class="card-body px-lg-5 py-lg-5">
                         <div class="text-center text-muted mb-4">
                             <small>
-                                    Создайте новый аккаунт или войдите с существующим
+                                Пожалуйста, представьтесь системе
                             </small>
                         </div>
                         <form role="form" method="POST" action="{{ route('login') }}">
@@ -67,7 +67,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="row mt-3">
+                <!--<div class="row mt-3">
                     <div class="col-6">
                         @if (Route::has('password.request'))
                             <a href="{{ route('password.request') }}" class="text-light">
@@ -80,7 +80,7 @@
                             <small>Создать новый аккаунт</small>
                         </a>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

@@ -48,5 +48,9 @@ class Group extends Model
         $this->users()->save($rings);
     }
 
+    public function assignUser(User $user){
+        $this->users()->save($user);
+    }
+
 
 }

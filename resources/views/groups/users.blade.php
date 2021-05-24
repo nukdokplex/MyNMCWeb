@@ -63,7 +63,17 @@
                 },
                 {
                     data: 'role',
-                    title: "Роль"
+                    title: "Роль",
+                    render: function (data){
+                        let translations = {
+                            'guest' : 'Гость',
+                            'student' : 'Студент',
+                            'teacher' : 'Преподаватель',
+                            'administrator' : 'Администрация',
+                            'system architect' : 'Системный архитектор'
+                        };
+                        return translations[data];
+                    }
                 }
             ];
 

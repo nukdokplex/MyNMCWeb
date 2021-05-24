@@ -42,6 +42,7 @@
     <script type="text/javascript" src="{{asset('assets/datatables/AltEditor/dataTables.altEditor.free.min.js')}}" ></script>
     <script type="text/javascript" src="{{asset('assets/select2/js/select2.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('assets/select2/js/i18n/ru.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/daterangepicker-master/moment.min.js')}}"></script>
     <script type="text/javascript">
         $(document).ready(function (){
             var availableRoles = JSON.parse('{!! json_encode($available_roles, JSON_UNESCAPED_UNICODE) !!}');
@@ -87,12 +88,18 @@
                 {
                     data: 'created_at',
                     title: 'Создан',
-                    type: "readonly"
+                    type: "readonly",
+                    render: function (data) {
+                        return moment(data).format('DD.MM.YYYY HH:mm:ss');
+                    }
                 },
                 {
                     data: 'updated_at',
                     title: 'Изменен',
-                    type: "readonly"
+                    type: "readonly",
+                    render: function (data) {
+                        return moment(data).format('DD.MM.YYYY HH:mm:ss');
+                    }
                 }
             ];
 

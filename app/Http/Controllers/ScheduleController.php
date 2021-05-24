@@ -16,7 +16,39 @@ use Spatie\Permission\Models\Role;
 class ScheduleController extends Controller
 {
     public function index(){
+        return view('schedule.edit.index');
+    }
 
+    public function schedule_days($model, $id){
+        $data = [];
+        if ($model == 'group'){
+            $group = Group::query()->where('id', '=', $id)->firstOrFail();
+
+            $data['_model'] = $model;
+            $data['model'] = $group;
+        }
+        else if ($model == 'teacher'){
+            $teacher = User::query()->where('id', '=', $id)->firstOrFail();
+
+            if (!$teacher->hasRole('teacher')){
+                abort(404);
+            }
+
+            $data['_model'] = $model;
+            $data['model'] = $teacher;
+        }
+        else if ($model == 'auditory'){
+            $auditory = Auditory::query()->where('id', '=', $id)->firstOrFail();
+
+            $data['_model'] = $model;
+            $data['model'] = $auditory;
+        }
+
+        $data['start_date'] = new \DateTime();
+        $data['end_date'] = new \DateTime();
+        date_add($data['end_date'], new \DateInterval('P2Y'));
+
+        return view('schedule.edit.days', $data);
     }
 
     // <editor-fold defaultstate="collapse" desc="Rings Schedule">

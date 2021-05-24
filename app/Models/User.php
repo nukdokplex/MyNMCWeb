@@ -59,4 +59,8 @@ class User extends Authenticatable
         );
 
     }
+
+    public function assignGroup(Group $group){
+        $this->groups()->save($group);
+    }
 }

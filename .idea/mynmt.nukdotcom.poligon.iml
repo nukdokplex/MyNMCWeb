@@ -140,6 +140,12 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/paquettg/php-html-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/paquettg/string-encode" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/elforastero/transliterate" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/yajra/laravel-datatables-oracle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nunomaduro/larastan" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/enlightn/enlightn" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/enlightn/security-checker" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

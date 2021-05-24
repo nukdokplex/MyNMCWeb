@@ -55,7 +55,6 @@ Route::post('ajax/subjects', [SubjectsController::class, 'update_subject_ajax'])
     ->name('ajax.subjects.update');
 
 //Auditories
-
 Route::get('auditories', [AuditoriesController::class, 'index'])
     ->name('auditories');
 
@@ -70,6 +69,15 @@ Route::post('ajax/auditories', [AuditoriesController::class, 'update_auditory_aj
 
 Route::delete('ajax/auditories', [AuditoriesController::class, 'delete_auditory_ajax'])
     ->name('ajax.auditories.delete');
+
+//Schedule
+Route::get('schedule/edit', [ScheduleController::class, 'index'])
+    ->name('schedule.edit');
+
+Route::get('schedule/edit/{model}/{id}', [ScheduleController::class, 'schedule_days'])
+    ->name('schedule.edit.model')
+    ->where(["model" => "group|teacher|auditory"])
+    ->where(["id" => "[0-9]+"]);
 
 //Primary Schedule
 Route::get('schedule/edit/primary', [ScheduleController::class, 'primary_schedule_groups'])

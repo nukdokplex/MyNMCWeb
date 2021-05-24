@@ -66,26 +66,17 @@ class UserController extends Controller
     /**
      * Returns all users
      */
-    public function users_ajax(){
+    public function users_ajax(Request $request){
         return response()->json(User::all());
     }
 
     public function users_detailed_ajax(){
-        $users = User::all()->makeVisible(['password']);
-        $users_to_return = [];
-        foreach ($users as $user) {
-            array_push($users_to_return, [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'password' => '',
-                'role' => $user->roles()->firstOrFail()->id,
-                'created_at' => Carbon::parse($user->created_at)->format('d.m.Y H:i:s'),
-                'updated_at' => Carbon::parse($user->updated_at)->format('d.m.Y H:i:s'),
-            ]);
-        }
+        return response()->json(User::query()->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->where('model_has_roles.model_type', '=', 'App\\Models\\User')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->select('users.id', 'users.name', 'users.email', 'users.email_verified_at', 'users.password', 'users.created_at', 'users.updated_at', 'roles.id AS role')->get()->makeVisible('password'));
 
-        return response()->json($users_to_return);
+
     }
 
     public function users_by_role_ajax(Request $request){
@@ -117,19 +108,15 @@ class UserController extends Controller
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
 
-        $users = [];
+        $role_ids = Role::query()->whereIn('name', $data['roles'])->select('id')->get();
 
-        foreach ($data['roles'] as $role){
-            $users_to_add = Role::findByName($role)->users()->get()->toArray();
+        $users = User::query()->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->where('model_has_roles.model_type', '=', 'App\\Models\\User')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->whereIn('roles.id', $role_ids)
+            ->select('users.id', 'users.name', 'users.email', 'users.email_verified_at', 'users.password', 'users.created_at', 'users.updated_at', 'roles.name AS role')->get()->toArray();
 
-            for ($i = 0; $i < count($users_to_add); $i++){
-                $users_to_add[$i]['role'] = self::translateRoleName($role);
-            }
-
-            $users = array_merge($users, $users_to_add);
-        }
-
-        return response()->json($users);
+        return json_encode($users, JSON_UNESCAPED_UNICODE);
     }
 
     public function users_create_ajax(Request $request){
@@ -251,7 +238,6 @@ class UserController extends Controller
             abort(404);
         }
 
-        $user->roles()->firstOrFail()->id;
         $this->getAvailableRoles(auth()->user()->roles()->firstOrFail());
         array_column(
             $this->getAvailableRoles(auth()->user()->roles()->firstOrFail()), 'id'
