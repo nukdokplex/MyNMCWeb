@@ -100,7 +100,7 @@
                         action: function (){
                             let group = groupsTable.rows({selected: true}).data()[0];
 
-                            window.location.href = '/schedule/edit/group/'+group.id;
+                            window.location.href = '/schedule/edit/group/'+group.id+'/0';
                         }
                     }
                 ],
@@ -140,7 +140,7 @@
                         action: function (){
                             let teacher = teachersTable.rows({selected: true}).data()[0];
 
-                            window.location.href = '/schedule/edit/teacher/'+teacher.id;
+                            window.location.href = '/schedule/edit/teacher/'+teacher.id+'/0';
                         }
                     }
                 ],
@@ -176,7 +176,7 @@
                         action: function (){
                             let auditory = auditoriesTable.rows({selected: true}).data()[0];
 
-                            window.location.href = '/schedule/edit/auditory/'+auditory.id;
+                            window.location.href = '/schedule/edit/auditory/'+auditory.id+'/0';
                         }
                     }
                 ],

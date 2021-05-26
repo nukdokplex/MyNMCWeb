@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PrimarySchedule extends Model
 {
@@ -32,8 +33,18 @@ class PrimarySchedule extends Model
         return $this->getSchedule()[$week_number][$day];
     }
 
-    public static function findByGroup(Group $group){
-        return $group->primarySchedule()->firstOrFail();
+    public static function findByGroup($group){
+        try {
+            return $group->primarySchedule()->firstOrFail();
+        }
+        catch (ModelNotFoundException $exception){
+            $ps = new PrimarySchedule();
+            $ps->setSchedule(config('mynmc.default_primary_schedule'));
+            $ps->save();
+            $ps->setGroup($group);
+            $ps->save();
+            return $ps;
+        }
     }
 
     public function getSchedule(){

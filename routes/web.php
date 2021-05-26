@@ -70,14 +70,33 @@ Route::post('ajax/auditories', [AuditoriesController::class, 'update_auditory_aj
 Route::delete('ajax/auditories', [AuditoriesController::class, 'delete_auditory_ajax'])
     ->name('ajax.auditories.delete');
 
-//Schedule
+//Schedule Edit
 Route::get('schedule/edit', [ScheduleController::class, 'index'])
     ->name('schedule.edit');
 
-Route::get('schedule/edit/{model}/{id}', [ScheduleController::class, 'schedule_days'])
-    ->name('schedule.edit.model')
+Route::get('schedule/edit/{model}/{id}/{week}', [ScheduleController::class, 'schedule'])
+    ->name('schedule.edit.edit')
     ->where(["model" => "group|teacher|auditory"])
-    ->where(["id" => "[0-9]+"]);
+    ->where(["id" => "[0-9]+"])
+    ->where(["week" => "[0-9]+"]);
+
+Route::get('ajax/schedule/edit', [ScheduleController::class, 'ajax_current_schedule'])
+    ->name('ajax.schedule.edit');
+
+Route::get('ajax/schedule/edit', [ScheduleController::class, 'ajax_current_schedule'])
+    ->name('ajax.schedule.edit');
+
+Route::put('ajax/schedule/edit', [ScheduleController::class, 'ajax_current_schedule_create'])
+    ->name('ajax.schedule.edit.create');
+
+Route::post('ajax/schedule/edit', [ScheduleController::class, 'ajax_current_schedule_edit'])
+    ->name('ajax.schedule.edit.update');
+
+Route::delete('ajax/schedule/edit', [ScheduleController::class, 'ajax_current_schedule_delete'])
+    ->name('ajax.schedule.edit.delete');
+
+Route::post('ajax/schedule/edit/synchronize', [ScheduleController::class, 'ajax_sync_schedule'])
+    ->name('ajax.schedule.edit.sync');
 
 //Primary Schedule
 Route::get('schedule/edit/primary', [ScheduleController::class, 'primary_schedule_groups'])

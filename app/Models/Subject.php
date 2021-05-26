@@ -15,4 +15,8 @@ class Subject extends Model
     protected $primaryKey = "id";
 
     public $timestamps = false;
+
+    public static function findById($id){
+        return static::query()->where('id', '=', $id);
+    }
 }

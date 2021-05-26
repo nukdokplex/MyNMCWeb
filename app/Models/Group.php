@@ -52,5 +52,8 @@ class Group extends Model
         $this->users()->save($user);
     }
 
+    public static function findById($id){
+        return static::query()->where('id', '=', $id);
+    }
 
 }

@@ -15,10 +15,10 @@
                         <a href="https://vk.com/nmk_nsk" class="nav-link" target="_blank">Группа ВКонтакте колледжа</a>
                     </li>
                     <li class="nav-item">
-                        <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">О проекте</a>
+                        <a href="https://nukdotcom.ru/about-mynmc/" class="nav-link" target="_blank">О проекте</a>
                     </li>
                     <li class="nav-item">
-                        <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">Лицензия MIT</a>
+                        <a href="https://nukdotcom.ru/mynmc-licence/" class="nav-link" target="_blank">Лицензия MIT</a>
                     </li>
                 </ul>
             </div>

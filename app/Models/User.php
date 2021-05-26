@@ -63,4 +63,8 @@ class User extends Authenticatable
     public function assignGroup(Group $group){
         $this->groups()->save($group);
     }
+
+    public static function findById($id){
+        return static::query()->where('id', '=', $id);
+    }
 }

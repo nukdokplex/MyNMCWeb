@@ -32,5 +32,9 @@ class RingsSchedule extends Model
         $this->groups()->saveMany($groups);
     }
 
-
+    public static function findByGroup($group){
+        return json_decode(RingsSchedule::query()->join('model_has_groups', 'rings_schedule.id', '=', 'model_has_groups.model_id')
+            ->where('model_has_groups.model_type', '=', 'App\\Models\\RingsSchedule')
+            ->where('model_has_groups.group_id', '=', $group->id)->firstOrFail()->rings, true);
+    }
 }
