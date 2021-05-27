@@ -36,6 +36,11 @@
     <script type="text/javascript" src="{{asset('assets/datatables/Buttons-1.7.0/js/dataTables.buttons.min.js')}}" ></script>
     <script type="text/javascript" src="{{asset('assets/datatables/Select-1.3.3/js/dataTables.select.min.js')}}" ></script>
     <script type="text/javascript" src="{{asset('assets/datatables/Responsive-2.2.7/js/dataTables.responsive.min.js')}}" ></script>
+    <script type="text/javascript" src="{{asset('assets/datatables/JSZip-2.5.0/jszip.min.js')}}" ></script>
+    <script type="text/javascript" src="{{asset('assets/datatables/pdfmake-0.1.36/pdfmake.min.js')}}" ></script>
+    <script type="text/javascript" src="{{asset('assets/datatables/pdfmake-0.1.36/vfs_fonts.js')}}" ></script>
+    <script type="text/javascript" src="{{asset('assets/datatables/Buttons-1.7.0/js/buttons.html5.js')}}" ></script>
+    <script type="text/javascript" src="{{asset('assets/datatables/Buttons-1.7.0/js/buttons.print.js')}}" ></script>
     <script type="text/javascript" src="{{asset('assets/datatables/AltEditor/dataTables.altEditor.free.min.js')}}" ></script>
     <script type="text/javascript">
         $(document).ready(function (){
@@ -115,11 +120,6 @@
                                     console.error(jqXHR, textStatus, errorThrown)
                                 }
                             });
-
-                            console.log(users);
-
-
-
                         }
                     };
 
@@ -139,17 +139,23 @@
                         },
                         responsive: true,
                         buttons:[
-                            'apply'
+                            'apply',
+                            'excel',
+                            {
+                                extend: 'csv',
+                                charset: 'UTF-8',
+                                bom: true
+                            },
+                            'pdf',
+                            'print'
                         ],
                         fnInitComplete: function (settings, json) {
-                            selectedUsers.forEach(user => {
-                                for (i = 0; i < usersTable.rows().count(); i++){
-                                    console.log(usersTable.rows(i).data()[0].id === user.id)
-                                    if (usersTable.rows(i).data()[0].id === user.id){
-                                        usersTable.rows(i).select();
-                                    }
+                            let data = usersTable.rows().data();
+                            for (let i = 0; i <  data.length; i++){
+                                if (selectedUsers.includes(data[i].id)){
+                                    usersTable.rows(i).select();
                                 }
-                            });
+                            }
                         }
                     });
                 },

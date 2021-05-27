@@ -17,9 +17,97 @@ use Spatie\Permission\Models\Role;
 
 class ScheduleController extends Controller
 {
-    // <editor-fold defaultstate="collapse" desc="Current Schedule">
 
     public function index(){
+        $user = auth()->user();
+        if ($user == null){
+            return redirect()->route('schedule.models', ['model_type' => 'group'], 302);
+        }
+        try {
+            $role = $user->roles()->firstOrFail();
+        }
+        catch (ModelNotFoundException $e){
+            return redirect()->route('schedule.models', ['model_type' => 'group'], 302);
+        }
+
+        if ($role->name == 'student'){
+            try {
+                $group = $user->groups()->firstOrFail();
+            }
+            catch (ModelNotFoundException $e){
+                return redirect()->route('schedule.models', ['model_type' => 'group'], 302);
+            }
+
+            return redirect()->route('schedule.model', ['model_type' => 'group', 'model_id' => $group->id], 302);
+        }
+        else if ($role->name == 'teacher'){
+            return redirect()->route('schedule.model', ['model_type' => 'teacher', 'model_id' => $user->id], 302);
+        }
+        else {
+            return redirect()->route('schedule.models', ['model_type' => 'group'], 302);
+        }
+    }
+
+    public function models($model_type){
+        $data = [];
+        $data['_model'] = $model_type;
+        $teacher = Role::findByName('teacher');
+        switch ($model_type){
+            case 'group':
+                $data['_model_str'] = 'группам';
+                $data['models'] = Group::query()
+                    ->selectRaw('groups.*, IFNULL(specializations.name, "(нет)") AS specialization')
+                    ->fromRaw('groups')
+                    ->join('group_has_specialization', 'groups.id', '=', 'group_has_specialization.group_id', 'left outer')
+                    ->join('specializations', 'group_has_specialization.specialization_id', '=', 'specializations.id', 'left outer')
+                    ->get()->toArray();
+                break;
+            case 'teacher':
+                $data['_model_str'] = 'преподавателям';
+                $data['models'] = User::query()
+                    ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+                    ->where('model_has_roles.model_type', '=', 'App\\Models\\User')
+                    ->where('model_has_roles.role_id', '=', $teacher->id)
+                    ->select('users.id', 'users.name')
+                    ->get()->toArray();
+                break;
+            case 'auditory':
+                $data['_model_str'] = 'аудиториям';
+                $data['models'] = Auditory::all()->toArray();
+                break;
+            default: abort(404);
+        }
+
+        return view('schedule.models', $data);
+    }
+
+    public function schedule($model_type, $model_id){
+        $data = ['_model' => $model_type];
+
+        switch ($model_type){
+            case 'group':
+                $data['model'] = Group::findById($model_id)->firstOrFail()->toArray();
+                $data['_model_str'] = 'группам';
+                break;
+            case 'teacher':
+                $data['models'] = User::query()
+                    ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+                    ->where('model_has_roles.model_type', '=', 'App\\Models\\User')
+                    ->where('model_has_roles.model_id', '=', $model_id)
+                    ->firstOrFail()->toArray();
+                $data['_model_str'] = 'преподавателям';
+                break;
+            case 'auditories':
+                $data['models'] = Auditory::findById($model_id)->firstOrFail()->toArray();
+                $data['_model_str'] = 'аудиториям';
+                break;
+            default: abort(404);
+        }
+    }
+
+    // <editor-fold defaultstate="collapse" desc="Current Schedule">
+
+    public function edit_index(){
         return view('schedule.edit.index');
     }
 
@@ -49,7 +137,7 @@ class ScheduleController extends Controller
         return $result;
     }
 
-    public function schedule($model, $id, $week){
+    public function edit_schedule($model, $id, $week){
 
         if ($week < 0 || $week > 29)
             abort(404);
@@ -249,24 +337,7 @@ class ScheduleController extends Controller
                 'date',
                 'date_format:d.m.Y'
             ]
-            ],
-            [
-                'number.required' => 'Номер обязателен!',
-                'number.numeric' => 'Номер должен быть числом!',
-                'number.in' => 'Номер должен входить в множество чисел от 1 до 8!',
-
-                'subgroup.required' => 'Номер подгруппы обязателен!',
-                'subgroup.numeric' => 'Номер погруппы должен быть числом!',
-                'subgroup.in' => 'Номер подгруппы должен входить в множество чисел от 1 до 4 и -1 при отсутствии!',
-
-                'group_id' => 'Указана неверная группа!',
-                'teacher_id' => 'Указан неверный преподаватель!',
-                'auditory_id' => 'Указана неверная аудитория!',
-                'subject_id' => 'Указан неверный предмет!',
-
-                'date' => 'Указана неверная дата!'
-            ]
-        );
+        ]);
 
         if ($validator->fails()){
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
@@ -473,11 +544,6 @@ class ScheduleController extends Controller
                     'numeric',
                     Rule::exists('schedule_sessions', 'id')
                 ]
-            ],
-            [
-                'id.required' => 'ИД обязателен!',
-                'id.numeric' => 'ИД должен быть числом!',
-                'id.exists' => 'ИД не найден в базе данных!',
             ]
         );
 

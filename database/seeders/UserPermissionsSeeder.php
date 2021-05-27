@@ -55,7 +55,6 @@ class UserPermissionsSeeder extends Seeder
 
         $teacher = Role::create(['name' => 'teacher']);
         $teacher->givePermissionTo([
-            'create posts',
             'create commentaries',
             'upload files'
         ]);

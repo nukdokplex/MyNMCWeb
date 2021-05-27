@@ -74,7 +74,7 @@ class GroupsController extends Controller
 
     public function group_users_ajax($group){
         return response()->json(
-            Group::query()->where("id", "=", $group)->firstOrFail()->users()->get()
+            Group::query()->where("id", "=", $group)->firstOrFail()->users()->select('id')->get()->pluck('id')
         );
     }
 

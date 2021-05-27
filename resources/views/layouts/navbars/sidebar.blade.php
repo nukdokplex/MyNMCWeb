@@ -77,7 +77,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link{{$active_tab == 'posts' ? ' active' : ''}}" href="#">
+                    <a class="nav-link{{$active_tab == 'posts' ? ' active' : ''}}" href="{{route('posts')}}">
                         <i class="mdi mdi-18px mdi-post"></i> Новости
                     </a>
                 </li>
@@ -87,68 +87,81 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link{{$active_tab == 'schedule' ? ' active' : ''}}" href="#">
+                    <a class="nav-link{{$active_tab == 'schedule' ? ' active' : ''}}" href="{{ route('schedule') }}">
                         <i class="mdi mdi-18px mdi-clock-outline"></i> Расписание
                     </a>
                 </li>
             </ul>
-            <!-- Divider -->
-            <hr class="my-3">
-            <!-- Heading -->
-            <h6 class="navbar-heading text-muted">Управление</h6>
-            <!-- Navigation -->
-            <ul class="navbar-nav mb-md-3">
-                <li class="nav-item">
-                    <a class="nav-link{{$active_tab == 'groups' ? ' active' : ''}}" href="{{route('groups')}}">
-                        <i class="mdi mdi-18px mdi-account-group"></i> Группы
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{$active_tab == 'specializations' ? ' active' : ''}}" href="{{route('specializations')}}">
-                        <i class="mdi mdi-18px mdi-toolbox"></i> Специальности
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{$active_tab == 'subjects' ? ' active' : ''}}" href="{{route('subjects')}}">
-                        <i class="mdi mdi-18px mdi-book-open-variant"></i> Предметы
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{$active_tab == 'auditories' ? ' active' : ''}}" href="{{route('auditories')}}">
-                        <i class="mdi mdi-18px mdi-google-classroom"></i> Аудитории
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{$active_tab == 'users' ? ' active' : ''}}" href="{{route('users')}}">
-                        <i class="mdi mdi-18px mdi-account-multiple"></i> Пользователи
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#schedule-sidebar-item" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">
-                        <i class="mdi mdi-18px mdi-table-clock"></i>
-                        <span class="nav-link-text">Расписание</span>
-                    </a>
-                    <div class="collapse{{in_array($active_tab, ['schedule_edit', 'primary_schedule_edit', 'rings_schedule_edit']) ? ' show' : ''}}" id="schedule-sidebar-item">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link{{$active_tab == 'schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit')}}">
-                                    Текущее расписание
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link{{$active_tab == 'primary_schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit.primary.groups')}}">
-                                    Основное расписание
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link{{$active_tab == 'rings_schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit.rings')}}">
-                                    Расписание звонков
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
+
+                <!-- Divider -->
+                <hr class="my-3">
+                <!-- Heading -->
+                <h6 class="navbar-heading text-muted">Управление</h6>
+                <!-- Navigation -->
+                <ul class="navbar-nav mb-md-3">
+                    @can('manage groups')
+                        <li class="nav-item">
+                            <a class="nav-link{{$active_tab == 'groups' ? ' active' : ''}}" href="{{route('groups')}}">
+                                <i class="mdi mdi-18px mdi-account-group"></i> Группы
+                            </a>
+                        </li>
+                    @endcan
+                    @can('manage specializations')
+                        <li class="nav-item">
+                            <a class="nav-link{{$active_tab == 'specializations' ? ' active' : ''}}" href="{{route('specializations')}}">
+                                <i class="mdi mdi-18px mdi-toolbox"></i> Специальности
+                            </a>
+                        </li>
+                    @endcan
+                    @can('manage subjects')
+                        <li class="nav-item">
+                            <a class="nav-link{{$active_tab == 'subjects' ? ' active' : ''}}" href="{{route('subjects')}}">
+                                <i class="mdi mdi-18px mdi-book-open-variant"></i> Предметы
+                            </a>
+                        </li>
+                    @endcan
+                    @can('manage auditories')
+                        <li class="nav-item">
+                            <a class="nav-link{{$active_tab == 'auditories' ? ' active' : ''}}" href="{{route('auditories')}}">
+                                <i class="mdi mdi-18px mdi-google-classroom"></i> Аудитории
+                            </a>
+                        </li>
+                    @endcan
+                    @can('manage users')
+                        <li class="nav-item">
+                            <a class="nav-link{{$active_tab == 'users' ? ' active' : ''}}" href="{{route('users')}}">
+                                <i class="mdi mdi-18px mdi-account-multiple"></i> Пользователи
+                            </a>
+                        </li>
+                    @endcan
+                    @can('manage schedule')
+                        <li class="nav-item">
+                            <a class="nav-link" href="#schedule-sidebar-item" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">
+                                <i class="mdi mdi-18px mdi-table-clock"></i>
+                                <span class="nav-link-text">Расписание</span>
+                            </a>
+                            <div class="collapse{{in_array($active_tab, ['schedule_edit', 'primary_schedule_edit', 'rings_schedule_edit']) ? ' show' : ''}}" id="schedule-sidebar-item">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link{{$active_tab == 'schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit')}}">
+                                            Текущее расписание
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link{{$active_tab == 'primary_schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit.primary.groups')}}">
+                                            Основное расписание
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link{{$active_tab == 'rings_schedule_edit' ? ' active' : ''}}" href="{{route('schedule.edit.rings')}}">
+                                            Расписание звонков
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    @endcan
+                </ul>
         </div>
     </div>
 </nav>

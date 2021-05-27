@@ -170,7 +170,13 @@
                 groupsOptions[group.id.toString()] = group.name;
             });
 
-            var subgroupsOptions = {'-1': "(все)", 1: "1", 2: "2", 3: "3", 4: "4"};
+            var subgroupsOptions = [
+                { id: -1, text: '(все)', selected: true },
+                { id: 1, text: '1'},
+                { id: 2, text: '2'},
+                { id: 3, text: '3'},
+                { id: 4, text: '4'},
+            ];
             var numberOptions = {1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8"};
 
             let columnDefs = [
@@ -210,13 +216,16 @@
                     data: 'subgroup',
                     title: 'Подгруппа',
                     type: 'select',
-                    options: subgroupsOptions,
+                    //options: subgroupsOptions,
                     select2: {
                         width: '100%',
+                        data: subgroupsOptions
                     },
                     render: function (data, type, row, meta){
-                        if (data == null || !(data in subgroupsOptions)) return null;
-                        return subgroupsOptions[data];
+
+
+                        if (data == null) return subgroupsOptions.find(x => x.id === -1).text;
+                        return subgroupsOptions.find(x => x.id === data).text;
 
                     }
                 },
@@ -300,6 +309,9 @@
                     select: 'single',
                     responsive: true,
                     altEditor: true,
+                    paging: false,
+                    info: false,
+                    searching: false,
                     buttons:[
                         {
                             text: 'Создать',
