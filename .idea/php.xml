@@ -140,6 +140,7 @@
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/vendor/enlightn/enlightn" />
       <path value="$PROJECT_DIR$/vendor/enlightn/security-checker" />
+      <path value="$PROJECT_DIR$/vendor/voku/arrayy" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

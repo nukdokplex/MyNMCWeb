@@ -37,3 +37,43 @@ function isWeekOdd(DateTimeInterface $date){
     return intval($date->format('W')) % 2 == 1;
 }
 
+/**
+ * Returns dates in current week number
+ *
+ * @param int $week
+ */
+function weekToDates(int $week){
+    if ($week < 0 || $week > 29){
+        return null;
+    }
+
+    $monday = new \DateTimeImmutable('monday this week'); //Tricky!
+
+    $monday = $week == 0 ? $monday : $monday->add(new \DateInterval('P'.$week.'W'));
+
+    $result = [];
+    array_push($result, $monday);
+
+    $i = 0;
+    while ($i < 6){
+        array_push($result, $result[$i]->add(new \DateInterval('P1D')));
+        $i++;
+    }
+
+    return $result;
+}
+
+function getDaysFrom(DateTimeImmutable $date, int $days){
+    if ($days == null || $days == 0){
+        return [];
+    }
+
+    $result = [$date];
+
+    for ($i = 0; $i < $days; $i++){
+        array_push($result, $result[$i]->add(new DateInterval('P1D')));
+    }
+
+    return $result;
+}
+

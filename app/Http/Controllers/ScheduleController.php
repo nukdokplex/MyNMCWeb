@@ -18,6 +18,8 @@ use Spatie\Permission\Models\Role;
 class ScheduleController extends Controller
 {
 
+
+
     public function index(){
         $user = auth()->user();
         if ($user == null){
@@ -47,6 +49,8 @@ class ScheduleController extends Controller
             return redirect()->route('schedule.models', ['model_type' => 'group'], 302);
         }
     }
+
+
 
     public function models($model_type){
         $data = [];
@@ -87,54 +91,74 @@ class ScheduleController extends Controller
         switch ($model_type){
             case 'group':
                 $data['model'] = Group::findById($model_id)->firstOrFail()->toArray();
-                $data['_model_str'] = 'группам';
+                $data['_model_str'] = 'группы';
                 break;
             case 'teacher':
-                $data['models'] = User::query()
+                $data['model'] = User::query()
                     ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
                     ->where('model_has_roles.model_type', '=', 'App\\Models\\User')
                     ->where('model_has_roles.model_id', '=', $model_id)
                     ->firstOrFail()->toArray();
-                $data['_model_str'] = 'преподавателям';
+                $data['_model_str'] = 'преподавателя';
                 break;
-            case 'auditories':
-                $data['models'] = Auditory::findById($model_id)->firstOrFail()->toArray();
-                $data['_model_str'] = 'аудиториям';
+            case 'auditory':
+                $data['model'] = Auditory::findById($model_id)->firstOrFail()->toArray();
+                $data['_model_str'] = 'аудитории';
                 break;
             default: abort(404);
         }
+
+        $dates = getDaysFrom(new \DateTimeImmutable(), 14);
+
+        $data['dates'] = $dates;
+
+        $data['schedule_sessions'] = ScheduleSession::query()
+            ->selectRaw("DATE_FORMAT(schedule_sessions.starts_at, '%d.%m.%Y') AS date,
+                TIME(schedule_sessions.starts_at) AS starts_at,
+                TIME(schedule_sessions.interrupts_at) AS interrupts_at,
+                TIME(schedule_sessions.continues_at) AS continues_at,
+                TIME(schedule_sessions.ends_at) AS ends_at,
+                schedule_sessions.number,
+                schedule_sessions.subgroup,
+                auditories.name AS auditory,
+                groups.name AS `group`,
+                subjects.name AS subject,
+                users.name AS teacher")
+            ->join('groups', 'schedule_sessions.group_id', '=', 'groups.id', 'left outer')
+            ->join('users', 'schedule_sessions.teacher_id', '=', 'users.id', 'left outer')
+            ->join('subjects', 'schedule_sessions.subject_id', '=', 'subjects.id', 'left outer')
+            ->join('auditories', 'schedule_sessions.auditory_id', '=', 'auditories.id', 'left outer')
+            ->whereBetween('schedule_sessions.starts_at', [
+                \DateTimeImmutable::createFromFormat('d.m.Y H:i:s', $dates[0]->format('d.m.Y').' 00:00:00'),
+                \DateTimeImmutable::createFromFormat('d.m.Y H:i:s', $dates[count($dates)-1]->format('d.m.Y').' 23:59:59')
+            ])
+            ->where(function ($query) use ($data){
+                switch ($data['_model']){
+                    case 'group': $query->where('schedule_sessions.group_id', '=', $data['model']['id']); break;
+                    case 'teacher': $query->where('schedule_sessions.teacher_id', '=', $data['model']['id']); break;
+                    case 'auditory': $query->where('schedule_sessions.auditory_id', '=', $data['model']['id']); break;
+                }
+            })
+            ->orderBy('schedule_sessions.starts_at')
+            ->orderBy('schedule_sessions.number')
+            ->orderBy('schedule_sessions.subgroup')
+            ->get()->toArray();
+
+        $max_subgroup = 2;
+
+        foreach ($data['schedule_sessions'] as $schedule_session){
+            if ($schedule_session['subgroup'] != null && $max_subgroup < $schedule_session['subgroup']){
+                $max_subgroup = $schedule_session['subgroup'];
+            }
+        }
+        $data['max_subgroup'] = $max_subgroup;
+        return view('schedule.schedule', $data);
     }
 
     // <editor-fold defaultstate="collapse" desc="Current Schedule">
 
     public function edit_index(){
         return view('schedule.edit.index');
-    }
-
-    /**
-     * Returns dates in current week number
-     *
-     * @param int $week
-     */
-    public function weekToDates(int $week){
-        if ($week < 0 || $week > 29){
-            return null;
-        }
-
-        $monday = new \DateTimeImmutable('monday this week'); //Tricky!
-
-        $monday = $week == 0 ? $monday : $monday->add(new \DateInterval('P'.$week.'W'));
-
-        $result = [];
-        array_push($result, $monday);
-
-        $i = 0;
-        while ($i < 6){
-            array_push($result, $result[$i]->add(new \DateInterval('P1D')));
-            $i++;
-        }
-
-        return $result;
     }
 
     public function edit_schedule($model, $id, $week){
@@ -148,9 +172,9 @@ class ScheduleController extends Controller
 
 
         for ($i = 0; $i < 30; $i++)
-            array_push($data['available_weeks'], ['number' => $i, 'dates' => $this->weekToDates($i), 'active' => $i == $week]);
+            array_push($data['available_weeks'], ['number' => $i, 'dates' => weekToDates($i), 'active' => $i == $week]);
 
-        $data['current_week'] = ['number' => $week, 'dates' => $this->weekToDates($week)];
+        $data['current_week'] = ['number' => $week, 'dates' => weekToDates($week)];
 
         $data['start_date'] = $data['available_weeks'][0]['dates'][0];
         $data['end_date'] = $data['available_weeks'][count($data['available_weeks'])-1]['dates'][6];

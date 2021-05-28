@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'schedule_view_days' => 14,
     'default_rings' => [
         [
             'session_number' => 1,

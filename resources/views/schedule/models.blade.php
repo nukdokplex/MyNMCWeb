@@ -15,13 +15,13 @@
                     <div class="card-body">
                         <ul class="nav nav-pills nav-fill flex-column flex-sm-row">
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0 {{ $_model == 'group' ? 'active' : '' }}" href="{{ $_model == 'active' ? '' : route('schedule.models', ['model_type' => 'group']) }}">Группы</a>
+                                <a class="nav-link mb-sm-3 mb-md-0 {{ $_model == 'group' ? 'active' : '' }}" href="{{ $_model == 'group' ? '' : route('schedule.models', ['model_type' => 'group']) }}">Группы</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0 {{ $_model == 'teacher' ? 'active' : '' }}" href="{{ $_model == 'active' ? '' : route('schedule.models', ['model_type' => 'teacher']) }}">Преподаватели</a>
+                                <a class="nav-link mb-sm-3 mb-md-0 {{ $_model == 'teacher' ? 'active' : '' }}" href="{{ $_model == 'teacher' ? '' : route('schedule.models', ['model_type' => 'teacher']) }}">Преподаватели</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0 {{ $_model == 'auditory' ? 'active' : '' }}" href="{{ $_model == 'active' ? '' : route('schedule.models', ['model_type' => 'auditory']) }}">Аудитории</a>
+                                <a class="nav-link mb-sm-3 mb-md-0 {{ $_model == 'auditory' ? 'active' : '' }}" href="{{ $_model == 'auditory' ? '' : route('schedule.models', ['model_type' => 'auditory']) }}">Аудитории</a>
                             </li>
                         </ul>
                         <div class="m-1 mt-4">
@@ -46,10 +46,20 @@
             //Get your hands out of this code!
             //It's beautiful as is!
 
+            var route = '{{route('schedule.model', ['model_type' => $_model, ':model_id'])}}';
+
             var columnDefs = [
                 {
                     data: "name",
-                    title: "Наименование"
+                    title: "Наименование",
+                    render: function (data, type, row){
+
+                        let url = route.replace(':model_id', row['id'])
+                        return '<a class="btn btn-outline-secondary" href="'+url+'">'+data+'</a>';
+                    },
+                    @if($_model == 'group')
+                        orderable: false,
+                    @endif
                 },
                 @if($_model == 'group')
                     {
@@ -77,27 +87,12 @@
                 @endif
             });
 
-            $('#models-datatable tbody').on('click', 'tr', function () {
 
-                try {
-                    let data = modelsTable.row(this).data();
-                    location.href = '/schedule/{!! $_model !!}/' + data['id'];
-                }
-                catch (e) {
-                    return;
-                }
-
-            } );
         });
     </script>
 @endpush
 
 @push('styles')
-    <style>
-        .datatable-container{
-            margin: 10px;
-        }
-    </style>
     <link rel="stylesheet" href="{{asset('assets/datatables/DataTables-1.10.24/css/jquery.dataTables.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('assets/datatables/Buttons-1.7.0/css/buttons.dataTables.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('assets/datatables/Select-1.3.3/css/select.dataTables.min.css')}}"/>
