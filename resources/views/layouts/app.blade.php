@@ -36,7 +36,7 @@
                 @csrf
             </form>
         @endauth
-        @if(!\Illuminate\Support\Facades\Request::exists('mobile'))
+        @if(!\Illuminate\Support\Facades\Cookie::has('mobile'))
             @if(isset($tab))
                 @include('layouts.navbars.sidebar', ['active_tab' => $tab])
             @else
@@ -45,11 +45,11 @@
         @endif
 
         <div class="main-content">
-            @if(!\Illuminate\Support\Facades\Request::input('mobile'))
+            @if(!\Illuminate\Support\Facades\Cookie::has('mobile'))
                 @include('layouts.navbars.navbar')
             @endif
             @yield('content')
-            @if(!\Illuminate\Support\Facades\Request::input('mobile'))
+            @if(!\Illuminate\Support\Facades\Cookie::has('mobile'))
                 @include("layouts.footers.default")
             @endif
         </div>

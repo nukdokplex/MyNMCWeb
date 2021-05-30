@@ -134,13 +134,15 @@
       <path value="$PROJECT_DIR$/vendor/paquettg/string-encode" />
       <path value="$PROJECT_DIR$/../../php/PEAR" />
       <path value="$PROJECT_DIR$/vendor/elforastero/transliterate" />
-      <path value="$PROJECT_DIR$/vendor/yajra/laravel-datatables-oracle" />
       <path value="$PROJECT_DIR$/vendor/nunomaduro/larastan" />
       <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/vendor/enlightn/enlightn" />
       <path value="$PROJECT_DIR$/vendor/enlightn/security-checker" />
       <path value="$PROJECT_DIR$/vendor/voku/arrayy" />
+      <path value="$PROJECT_DIR$/vendor/tymon/jwt-auth" />
+      <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/vendor/namshi/jose" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

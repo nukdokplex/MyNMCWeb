@@ -120,5 +120,10 @@ class GroupsController extends Controller
         }
     }
 
+    public function api_groups(){
+        $groups = Group::all()->makeHidden('description');
+
+        return response()->json($groups, 200);
+    }
 
 }

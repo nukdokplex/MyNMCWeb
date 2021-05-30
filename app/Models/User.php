@@ -11,8 +11,9 @@ use Illuminate\Log\Logger;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasRoles, HasRelationships;
 
@@ -60,11 +61,25 @@ class User extends Authenticatable
 
     }
 
+    public function getGroup() {
+        return $this->groups()->firstOrFail();
+    }
+
     public function assignGroup(Group $group){
         $this->groups()->save($group);
     }
 
     public static function findById($id){
         return static::query()->where('id', '=', $id);
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

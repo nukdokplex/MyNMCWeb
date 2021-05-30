@@ -9,6 +9,8 @@ use App\Models\RingsSchedule;
 use App\Models\ScheduleSession;
 use App\Models\Subject;
 use App\Models\User;
+use Arrayy\Arrayy;
+use http\Message;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,8 +51,6 @@ class ScheduleController extends Controller
             return redirect()->route('schedule.models', ['model_type' => 'group'], 302);
         }
     }
-
-
 
     public function models($model_type){
         $data = [];
@@ -956,4 +956,102 @@ class ScheduleController extends Controller
     }
 
     // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="API">
+
+    public function api_schedule($model = null, $model_id = null){
+        $user = auth('api')->user();
+
+        $data = ['_model' => $model];
+
+        $dates = getDaysFrom(getDateWithTime(new \DateTimeImmutable(), '00:00:00'), 14);
+
+        if ($model == 'group'){
+            try {
+                $model = Group::findById($model_id)->firstOrFail()->makeHidden('description')->toArray();
+            }
+            catch (ModelNotFoundException $e){
+                abort(404);
+            }
+
+            $data['model'] = $model;
+        }
+        else if ($model == 'teacher'){
+            try {
+                $model = User::findById($model_id)->firstOrFail()->makeHidden([
+                    'email_verified_at',
+                    'password',
+                    'remember_token',
+                    'created_at',
+                    'updated_at'
+                ])->toArray();
+            }
+            catch (ModelNotFoundException $e){
+                abort(404);
+            }
+
+            $data['model'] = $model;
+        }
+        else if ($model == 'auditory'){
+            try {
+                $model = Auditory::findById($model_id)->firstOrFail()->makeHidden('description')->toArray();
+            }
+            catch (ModelNotFoundException $e){
+                abort(404);
+            }
+
+            $data['model'] = $model;
+        }
+        else {
+            abort(404);
+        }
+
+        $sss = ScheduleSession::query()
+            ->selectRaw("DATE_FORMAT(schedule_sessions.starts_at, '%d.%m.%Y') AS date,
+                TIME(schedule_sessions.starts_at) AS starts_at,
+                TIME(schedule_sessions.interrupts_at) AS interrupts_at,
+                TIME(schedule_sessions.continues_at) AS continues_at,
+                TIME(schedule_sessions.ends_at) AS ends_at,
+                schedule_sessions.number,
+                schedule_sessions.subgroup,
+                auditories.name AS auditory,
+                groups.name AS `group`,
+                subjects.name AS subject,
+                users.name AS teacher")
+            ->join('groups', 'schedule_sessions.group_id', '=', 'groups.id', 'left outer')
+            ->join('users', 'schedule_sessions.teacher_id', '=', 'users.id', 'left outer')
+            ->join('subjects', 'schedule_sessions.subject_id', '=', 'subjects.id', 'left outer')
+            ->join('auditories', 'schedule_sessions.auditory_id', '=', 'auditories.id', 'left outer')
+            ->whereBetween('schedule_sessions.starts_at', [
+                \DateTimeImmutable::createFromFormat('d.m.Y H:i:s', $dates[0]->format('d.m.Y').' 00:00:00'),
+                \DateTimeImmutable::createFromFormat('d.m.Y H:i:s', $dates[count($dates)-1]->format('d.m.Y').' 23:59:59')
+            ])
+            ->where(function ($query) use ($data){
+                switch ($data['_model']){
+                    case 'group': $query->where('schedule_sessions.group_id', '=', $data['model']['id']); break;
+                    case 'teacher': $query->where('schedule_sessions.teacher_id', '=', $data['model']['id']); break;
+                    case 'auditory': $query->where('schedule_sessions.auditory_id', '=', $data['model']['id']); break;
+                }
+            })
+            ->orderBy('schedule_sessions.starts_at')
+            ->orderBy('schedule_sessions.number')
+            ->orderBy('schedule_sessions.subgroup')
+            ->get()
+            ->toArray();
+
+        $data['dates'] = [];
+
+
+        foreach ($dates as $date){
+            $date_str = $date->format('d.m.Y');
+
+            $data['dates'][$date_str] = (new Arrayy($sss))->filterBy('date', $date_str)->toArray();
+        }
+
+        return response()->json($data, 200);
+    }
+
+    // </editor-fold>
+
+
 }

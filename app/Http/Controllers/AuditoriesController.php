@@ -57,7 +57,7 @@ class AuditoriesController extends Controller
         try {
             $auditory = Auditory::query()->where('id', '=', $request->json('id'))->firstOrFail();
         }
-        catch (ModelNotFoundException){
+        catch (ModelNotFoundException $e){
             abort(404);
         }
 
@@ -82,12 +82,18 @@ class AuditoriesController extends Controller
         try {
             $auditory = Auditory::query()->where('id', '=', $request->json('id'))->firstOrFail();
         }
-        catch (ModelNotFoundException){
+        catch (ModelNotFoundException $e){
             abort(404);
         }
 
         $auditory->delete();
 
         return response('ok!');
+    }
+
+    public function api_auditories(){
+        $auditories = Auditory::all()->makeHidden('description');
+
+        return response()->json($auditories, 200);
     }
 }

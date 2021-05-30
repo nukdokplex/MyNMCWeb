@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\AuditoriesController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\HomeController;
@@ -231,6 +232,8 @@ Route::group(['middleware' => 'can:manage schedule'], function () {
 Route::group(['middleware' => 'can:manage app settings'], function () {
 
 });
+
+
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);

@@ -77,3 +77,8 @@ function getDaysFrom(DateTimeImmutable $date, int $days){
     return $result;
 }
 
+function getDateWithTime(DateTimeImmutable $date, string $time){
+    return DateTimeImmutable::createFromFormat('d.m.Y H:i:s',
+        $date->format('d.m.Y') . ' ' . $time);
+}
+

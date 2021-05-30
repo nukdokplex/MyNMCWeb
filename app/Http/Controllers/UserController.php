@@ -258,6 +258,42 @@ class UserController extends Controller
 
     }
 
+    public function api_userinfo(){
+        if (!auth('api')->check()){
+            return response()->json(['status' => 403, 'message' => 'Запрещено'], 403);
+        }
+        else {
+            $user = auth('api')->user();
 
+            try {
+                $group = $user->getGroup();
+            }
+            catch (ModelNotFoundException $e){
+                $group = null;
+            }
+            try {
+                $role = $user->roles()->firstOrFail()->name;
+            }
+            catch (ModelNotFoundException $e){
+                $role = null;
+            }
+            return response()->json(['name' => $user->name, 'group' => $group, 'avatar' => \Gravatar::get($user->email), 'role' => $role]);
+        }
+    }
+
+    public function api_teachers(){
+        $teacher = Role::findByName('teacher');
+
+        $teachers = $teacher->users()->get()->makeHidden([
+            'email_verified_at',
+            'password',
+            'remember_token',
+            'created_at',
+            'updated_at',
+            'pivot'
+        ]);
+
+        return response()->json($teachers);
+    }
 
 }
