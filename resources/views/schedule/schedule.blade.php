@@ -92,7 +92,8 @@
                                                     $is_date_rendered = true;
                                                 }
                                                 echo '<td>'.$number.'</td>';
-                                                if ($schedule->first()->get('number') != $number){
+
+                                                if ($schedule->first() == null || $schedule->first()->get('number') != $number){
 
                                                     /** @var int $max_subgroup */
                                                     echo '<td colspan="'.$max_subgroup.'"></td>';

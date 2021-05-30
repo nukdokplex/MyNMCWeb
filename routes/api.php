@@ -30,7 +30,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => [''],
+    'middleware' => ['jwt.verify'],
 ], function ($router) {
     Route::get('me', [UserController::class, 'api_userinfo']);
 });
