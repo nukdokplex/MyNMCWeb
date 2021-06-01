@@ -40,6 +40,10 @@ Route::get('schedule/{model_type}/{model_id}', [ScheduleController::class, 'sche
     ->where(['model_type' => 'group|teacher|auditory'])
     ->where(["model_id" => "[0-9]+"]);
 
+//Mobile
+
+Route::get('mobile_login', [\App\Http\Controllers\Auth\MobileLoginController::class, 'login']);
+
 Route::group(['middleware' => 'can:manage groups'], function () {
     Route::get('groups', [GroupsController::class, "index"])
         ->name('groups');

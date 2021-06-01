@@ -19,4 +19,6 @@ class Subject extends Model
     public static function findById($id){
         return static::query()->where('id', '=', $id);
     }
+
+
 }
