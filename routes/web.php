@@ -1,19 +1,18 @@
 <?php
 
-use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\AuditoriesController;
+use App\Http\Controllers\Auth\MobileLoginController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SpecializationsController;
 use App\Http\Controllers\SubjectsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 
@@ -24,10 +23,10 @@ Route::get('news', [NewsController::class, 'index'])
     ->name("news");
 
 //Posts
-Route::get('posts', [function(){
-    return view('posts.index');
-}])->name('posts');
+Route::get('posts', [PostsController::class, 'index'])
+    ->name('posts');
 
+//Schedule
 Route::get('schedule/', [ScheduleController::class, 'index'])
     ->name('schedule');
 
@@ -41,8 +40,7 @@ Route::get('schedule/{model_type}/{model_id}', [ScheduleController::class, 'sche
     ->where(["model_id" => "[0-9]+"]);
 
 //Mobile
-
-Route::get('mobile_login', [\App\Http\Controllers\Auth\MobileLoginController::class, 'login']);
+Route::get('mobile_login', [MobileLoginController::class, 'login']);
 
 Route::group(['middleware' => 'can:manage groups'], function () {
     Route::get('groups', [GroupsController::class, "index"])
