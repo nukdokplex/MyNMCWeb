@@ -277,7 +277,7 @@ class UserController extends Controller
             catch (ModelNotFoundException $e){
                 $role = null;
             }
-            return response()->json(['id' => $user->id,'name' => $user->name, 'group' => $group, 'avatar' => \Gravatar::get($user->email), 'role' => $role]);
+            return response()->json(['id' => $user->id, 'email' => $user->email, 'name' => $user->name, 'group' => $group, 'avatar' => \Gravatar::get($user->email), 'role' => $role]);
         }
     }
 
