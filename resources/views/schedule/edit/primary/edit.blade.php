@@ -165,6 +165,7 @@
                         text: 'Изменить',
                         name: 'edit'
                     },
+                    @if(!isset($_COOKIE['mobile']) || $_COOKIE['mobile'] != 'true')
                     'excel',
                     {
                         extend: 'csv',
@@ -173,6 +174,7 @@
                     },
                     'pdf',
                     'print'
+                    @endif
                 ],
             });
         });

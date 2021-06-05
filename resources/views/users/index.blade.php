@@ -11,14 +11,16 @@
                             <div class="col-8">
                                 <h3 class="mb-0">Пользователи</h3>
                             </div>
+                            @if(!isset($_COOKIE['mobile']) || $_COOKIE['mobile'] != 'true')
                             <div class="col-4 text-right">
                                 <a href="{{route('groups')}}" class="btn btn-sm btn-primary">Группы</a>
                             </div>
+                                @endif
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="datatable-container">
-                            <table id="users-datatable">
+                            <table id="users-datatable" class="compact">
 
                             </table>
                         </div>
@@ -60,7 +62,7 @@
                 {
                     data: "name",
                     title: "Имя пользователя",
-                    unique: true,
+                    unique: true
                 },
                 {
                     data: 'email',
@@ -78,7 +80,7 @@
                     type: 'select',
                     options: availableRoles,
                     select2: {
-                        width: '100%',
+
                     },
                     render: function (data, type, row, meta){
                         if (data == null || !(data in availableRoles)) return null;
@@ -89,6 +91,7 @@
                     data: 'created_at',
                     title: 'Создан',
                     type: "readonly",
+                    visible: false,
                     render: function (data) {
                         return moment(data).format('DD.MM.YYYY HH:mm:ss');
                     }
@@ -97,6 +100,7 @@
                     data: 'updated_at',
                     title: 'Изменен',
                     type: "readonly",
+                    visible: false,
                     render: function (data) {
                         return moment(data).format('DD.MM.YYYY HH:mm:ss');
                     }
@@ -114,6 +118,7 @@
                 },
                 columns: columnDefs,
                 dom: 'Bfrtip',
+                scrollX: true,
                 select: 'single',
                 responsive: true,
                 altEditor: true,
@@ -184,6 +189,9 @@
     <style>
         .datatable-container{
             margin: 10px;
+        }
+        td.no-wrap {
+
         }
     </style>
     <link rel="stylesheet" href="{{asset('assets/datatables/DataTables-1.10.24/css/jquery.dataTables.min.css')}}"/>

@@ -94,7 +94,8 @@
                         text: 'Обновить',
                         name: 'refresh'
                     },
-                    'excel',
+                    @if(!isset($_COOKIE['mobile']) || $_COOKIE['mobile'] != 'true')
+                        'excel',
                     {
                         extend: 'csv',
                         charset: 'UTF-8',
@@ -102,7 +103,7 @@
                     },
                     'pdf',
                     'print'
-
+                    @endif
                 ],
                 onAddRow: function (datatable, rowdata, success, error) {
                     $.ajax({

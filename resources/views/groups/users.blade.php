@@ -140,6 +140,7 @@
                         responsive: true,
                         buttons:[
                             'apply',
+                            @if(!isset($_COOKIE['mobile']) || $_COOKIE['mobile'] != 'true')
                             'excel',
                             {
                                 extend: 'csv',
@@ -148,6 +149,7 @@
                             },
                             'pdf',
                             'print'
+                            @endif
                         ],
                         fnInitComplete: function (settings, json) {
                             let data = usersTable.rows().data();

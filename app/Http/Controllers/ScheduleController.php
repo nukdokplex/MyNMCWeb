@@ -1044,8 +1044,7 @@ class ScheduleController extends Controller
 
         foreach ($dates as $date){
             $date_str = $date->format('d.m.Y');
-
-            $data['dates'][$date_str] = (new Arrayy($sss))->filterBy('date', $date_str)->toArray();
+            array_push($data["dates"], ["date" => $date_str, "sessions" => (new Arrayy($sss))->filterBy('date', $date_str)->toArray()]);
         }
 
         return response()->json($data, 200);

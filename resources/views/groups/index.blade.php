@@ -105,6 +105,7 @@
                         text: 'Обновить',
                         name: 'refresh'
                     },
+                    @if(!isset($_COOKIE['mobile']) || $_COOKIE['mobile'] != 'true')
                     'excel',
                     {
                         extend: 'csv',
@@ -113,7 +114,7 @@
                     },
                     'pdf',
                     'print'
-
+                    @endif
                 ],
                 onAddRow: function (datatable, rowdata, success, error) {
                     rowdata._token = '{{csrf_token()}}';
