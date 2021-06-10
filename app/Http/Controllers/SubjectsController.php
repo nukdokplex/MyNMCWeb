@@ -25,7 +25,7 @@ class SubjectsController extends Controller
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
 
-        Subject::query()->where('id', '=', $request->json()->all());
+        Subject::query()->where('id', '=', $request->json("id"))->delete();
 
         return response('ok!');
     }

@@ -76,11 +76,11 @@
                         <i class="mdi mdi-18px mdi-home"></i> Главная
                     </a>
                 </li>
-                <li class="nav-item">
+            <!-- <li class="nav-item">
                     <a class="nav-link{{$active_tab == 'posts' ? ' active' : ''}}" href="{{route('posts')}}">
                         <i class="mdi mdi-18px mdi-post"></i> Новости
                     </a>
-                </li>
+                </li>-->
                 <li class="nav-item">
                     <a class="nav-link{{$active_tab == 'news' ? ' active' : ''}}" href="{{ route('news') }}">
                         <i class="mdi mdi-18px mdi-newspaper"></i> Новости колледжа
