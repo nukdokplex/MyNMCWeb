@@ -123,7 +123,7 @@ class UserController extends Controller
         $validator = \Validator::make($request->json()->all(), [
             'name' => 'required|max:100',
             'email' => 'required|max:255|email:rfc,dns,spoof',
-            'password' => 'required|password:api|max:50|min:8',
+            'password' => 'required|max:50|min:8',
             'role' => [
                 'required',
                 'numeric',
@@ -140,7 +140,7 @@ class UserController extends Controller
 
         $user->name = $request->json('name');
         $user->email = $request->json('email');
-        $user->markEmailAsVerified();
+        //$user->markEmailAsVerified();
 
         $user->password = Hash::make($request->json('password'));
 
@@ -168,7 +168,7 @@ class UserController extends Controller
             ],
             'name' => 'required|max:100',
             'email' => 'required|max:255|email:rfc,dns,spoof',
-            'password' => 'required|password:api|max:50|min:8',
+            'password' => 'required|max:50|min:8',
             'role' => [
                 'required',
                 'numeric',
@@ -198,7 +198,7 @@ class UserController extends Controller
 
         $user->name = $request->json('name');
         $user->email = $request->json('email');
-        $user->markEmailAsVerified();
+        //$user->markEmailAsVerified();
 
         if ($is_password) $user->password = Hash::make($request->json('password'));
 

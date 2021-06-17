@@ -85,8 +85,12 @@ class AuditoriesController extends Controller
         catch (ModelNotFoundException $e){
             abort(404);
         }
-
-        $auditory->delete();
+        try {
+            $auditory->delete();
+        }
+        catch (\Exception $e){
+            return response()->json(['status' => 400, 'errors' => "К сожалению действие невозможно, т.к. эта строка содержит необходимые данные для других таблиц."]);
+        }
 
         return response('ok!');
     }

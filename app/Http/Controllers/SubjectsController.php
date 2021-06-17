@@ -24,8 +24,12 @@ class SubjectsController extends Controller
         if ($validator->fails()){
             return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
-
-        Subject::query()->where('id', '=', $request->json("id"))->delete();
+        try {
+            Subject::query()->where('id', '=', $request->json("id"))->delete();
+        }
+        catch (\Exception $e){
+            return response()->json(['status' => 400, 'errors' => "К сожалению, действие невозможно, т.к. данная строка используется другими сущностями. Действие приведет к неработоспособности системы."], 400);
+        }
 
         return response('ok!');
     }
